@@ -1,0 +1,139 @@
+---
+title: "Accelerating the Profitability of Hewlett-Packard’s Supply Chains"
+subtitle: "Corey Billington, Gianpaolo Callioni, Barrett Crane, John D. Ruark, Julie Unruh Rapp, Trace White, Sean P. Willems"
+author: "Harshvardhan"
+date: "2022-10-02"
+output: pdf_document
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Paper Reviewed
+
+Billington, C., Callioni, G., Crane, B., Ruark, J. D., Rapp, J. U., White, T., & Willems, S. P. (2004). Accelerating the profitability of Hewlett-Packard's supply chains. *Interfaces*, *34*(1), 59-72.
+
+PDF available at: <https://seanwillems.com/wp-content/uploads/2020/11/Billington_et_al_Interfaces_v34n1_JanFeb2004.pdf>
+
+# Highlights of the Paper
+
+This paper shows how HP used a visual planning tool, PowerChain, developed by Opiant to create visual supply chains that were used by several organisations within HP for various supply chain designs. Internally, the project was driven by Strategic Planning and Modelling group (SPaM).
+
+The paper presents two examples of how the tool was used in streamlining the inventory placement and planning. First, it shows how it was used for digital imaging business where HP competed with Canon, Kodak, Nikon, Olympus and Sony. Product life cycles ran less than a year and prices dropped rapidly through the year. Therefore, the supply chain needed to be resilient.
+
+## Digital Imaging Business
+
+HP had over half a dozen digital cameras ranging from aggresively priced autofocus cameras to high-optical-zoom, high-megapixel premier cameras. As described previously, it operated in a very competitive environment.
+
+To describe the potential changes to the supply chain environment, five different scenarios were proposed.
+
+![](images/Screen%20Shot%202022-10-01%20at%2011.02.45%20PM.png)
+
+1.  In the first scenario, manufacturing and localisation was done in a factory in Asia and the FGI was shipped to the regional distribution centers.
+2.  In the second scenario, localisation was postponed to the last stage when the cameras reached the regional DCs.
+3.  Scenario 3 eliminated the hub and manufacturing and location happened at a factory in Asia, from where FGI was shipped to regional DCs.
+4.  Scenario 4 ignored regional DC and delivered localised products directly to the retailers.
+5.  Scenario 5 represented full consolidation where the Asia hub manufactured, localised, and shipped to the end retailers.
+
+### Supply Chain Costs
+
+-   **Variable costs:** Variable costs consist of the value added at each stage in the manufacturing process, including per-unit transit costs, direct manufacturing costs, and labor costs
+
+-   **Fixed costs**: Costs that are not volume sensitive and depend only on the supply-chain configuration.
+
+-   **Inventory-driven costs** are dictated by the cost of the product, the holding-cost rate, the service level, the supply variability, and the demand uncertainty.
+
+### Findings and Implementation
+
+Scenario 4, manufacturing in Asia, localisation and distribution from the Asian hub, was the cheapest option our of the four options. This scenario had two specific benefits.
+
+1.  **Step-function improvement:** There are improvements which can translate directly to cost reductions by restructing the supply chain, given that the new state is more efficient.[^1]
+2.  **Business-process changes:** Knowing the optimal policy, business policy can be changed reliably.
+
+[^1]: I do not understand this point completely. Are we ignoring the cost of change? Also, what is "step" in this?
+
+Implementing this scenario had another three benefits.
+
+1.  Optimal policy was realised in practice.
+2.  Moving from Scenario 1 to 4 reduced inventory-driven cost and also the aggregate amount of inventory in the system, freeing up cash for other uses.
+3.  Lower inventory levels reduced the cost of being wrong and the overall inventory risk.
+
+This change reduced the inventory levels by over 30 percent and reduced total supply-chain costs by over five per cent. The project was implemented completely. PowerChain modelling tool was disseminated through the HP functional groups, including the Injet Supplies business.
+
+## Inkjet Supplies
+
+HP is the pioneer and world-leader in the Inkjet supplies business. It includes over 15 product families and over 250 manufacturing stock keeping units.[^2] The inkjet supplies business comprised of HP-owned factories, which would ship the cartridges in bulk to regional completion centers called pen completion centers (PCC). They were responsible for localisation, packaging, and shipping to channel partners.
+
+[^2]: It amazes me that in 20 years they went from 250 SKUs to around 10,000 SKUs. 10,000 includes more than Inkjet --- Laserjet, paper, toner, copier, 3D and more --- but still, the growth is mind boggling.
+
+![](images/Screen%20Shot%202022-10-01%20at%2011.03.24%20PM.png)
+
+Bulk pen inventory at the PCCs helps decouple customer-facing operations from the long lead times of the factories and to buffer the system from the demand variability associated with the dozens of pen-packaging configurations HP offers. Bulk pen inventory is the largest safety-stock buffer in the system; by pooling unpackaged, bulk inventory at the PCCs, HP postpones packaging decisions so that it can respond to shifts in regional demand.
+
+PowerChain was instrumental in enabling this work where the HP team could visualise the network in multiple ways to find the best network that was the least costly. The process didn't take a lot of time to implement and didn't face resistance from the planners. Why? Because it was the planners themselves using the tool and coming up with the best model. They required no extra convincing that this was the best model.
+
+![](images/Screen%20Shot%202022-10-01%20at%2011.03.48%20PM.png)
+
+The longest stages in the implementation of the project were data collection and implementation.[^3] The team Supplies Inventory Modelling (SIM) was *experienced enough to know that a model's optimal solution need not be the best to implement in practice*. In reality, many near-optimal solutions have higher cost of implementation as models do not reflect the operating constraints entirely.
+
+[^3]: In my honest opinion, if we do it today at HP, this would be still true. We've covered some distance but data quality issues are still a major roadblock to any new analytics project.
+
+The team's project also gained external validity from HP's Finance group which verified the current-state model against the actual costs by comparing the model's inputs with actual booked values. They got values as close to pennies, which was an endorsement of PowerChain's validity.
+
+### Moving Shipments from Air to Sea
+
+The team found that if they were to move transoceanic freight lanes from air to ocean, HP could realise an NPV greater than \$80 million. However, this notion sounded counterintuitive. Traditionally, planners focussed on responsiveness through speed, whereas ocean shipments could help minimize both cycle times as well as inventory levels. But the tool showed the potential benefit that could be realised.
+
+Within six months of implementation, more than 90% of the units targeted for ocean freight were indeed on ocean which gave the organisation over \$20 million dollar extra stream of cash flow. Between January 2001 and January 2003, the tool was used to model over 1,500 supply chains.[^4]
+
+[^4]: I believe this number was calculated thanks to the version control system implemented with the tool.
+
+# PowerChain Algorithm
+
+In multi-echelon supply chain, the problem of choosing inventory-stocking locations is a problem with exponential complexity. A five node network which has to either place or not place inventory at a node has $2^5 = 32$ choices. This is known as buffering at a location, i.e. the location fully satisfies the demand from that node.
+
+Practically, managers like to view the problem as one of the three options.
+
+1.  **Stock-everywhere:** Each stage has a full buffer of its expected demand. This loses the advantages of pooling: echelons are decoupled, variability is multiplicative, risk of mismanagement by having too much inventory is high.
+2.  **Stock-at-final-stage-only:** Only the final stage buffers the entire supply chain. This has problems because the final stage products are localised and differentiated, so inventory is specialised and maintaining high service level is expensive.
+3.  **Stock-at-final-stage-and-some-upstream-stage:** the final stage holds safety stock to satisfy customer demand, but this inventory is not buffering for the entire supply chain, only part of it. One of the upstream stages also buffers, providing an intermediate decoupling point.
+
+The PowerChain algorithm works as described in @graves2000 The supply chain is modelled as a network where nodes are stages in supply chain and arcs denote that an upstream stage supplies a downstream stage. A stage represents a major processing function in the supply chain, such as procurement, production, etc. Each stage is a potential location for holding safety-stock inventory of the item processed at that stage.
+
+Let the directed acyclic network described above be represented as $G = (V, A)$, where $V$ is the set of stages indexed by $i$ and $A$ is the set of all arcs represented by $(i, j)$. The set $V_d$ is the set of demand nodes. That is, if stage $k$ is a demand node then $(k, j) \notin A$.
+
+Each stage has a stage time $T_i$. Stage time includes time for the input to be available, production is complete and item is ready to move to the next stage (or the end customer) --- that is, time from start to finish at that stage.
+
+The decision variables at each stage $i$ is $S_i$ and $SI_i$. $S_i$ represents the service time quoted by stage $i$ to it's downstream stage; $SI_i$ is the (maximum) service time[^5] quoted to stage $i$ by its upstream stage.
+
+[^5]: Why maximum? I don't know.
+
+For the demand nodes in $V_d$ , the customers have the service time quoted to them as $b_i$. The cost is captured by the function $c_i(S_i, SI_i)$ for each stage $i$. @graves2000 derived the cost function to be the following.
+
+$$
+c_i(S_i, SI_i) = h_i \{D_i(SI_i+T_i-S_i) - (SI_i + T_i - S_i)\mu_i\},
+$$
+
+where $D_i(x)$ is the maximum possible demand seen by the stage over the time interval $x$ and $\mu_j$ is the mean demand in a period. The objective function is defined as the following.
+
+$$
+\min \sum_{i = 1}^N c_i(S_i, SI_i).
+$$
+
+The maximum incoming service time has to be greater than outgoing service time. That is $SI_j - S_i \geq 0, \forall (i, j) \in A$. Furthermore, the service times would also be bounded by the business as per their needs, $0\leq L_i \leq S_i \leq U_i, \forall i = 1, 2, \dots, N$, where $L_i$ and $U_i$ are the lower and upper limits of the service levels.
+
+#### Net Replenishment Time
+
+$SI_i + T_i - S_i$ is defined as the net replenishment lead time. It is the time of exposure over which the base stock must cover the expected demand. In other words, it is the time required to replenish an item at a stage (the maximum incoming service time plus the stage's processing time), netted by the service time being quoted by the stage. (If the stage quotes a service time equal to its replenish- ment time, it needs no safety stock because all orders will be satisfied after one full replenishment cycle; this corresponds to a net replenishment lead time of zero.)
+
+This can also be bounded by the decision maker as follows.
+
+$$
+NL_i \leq SI_i + T_i - S_i \leq NU_i, \forall i \in \{1, 2, ..., N\}.
+$$
+
+With these constraints, the nonlinear programming problem with integral decision variables can be solved via the dynamic programming approach described in @graves2000 and @humair2006.
+
+# References

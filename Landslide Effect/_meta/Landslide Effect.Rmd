@@ -1,0 +1,269 @@
+---
+journal: msom
+title: "Landslide Effect: How Looking Into The Future Messes Up Inventory in Practice"
+shorttitle: "Landslide Effect"
+authors:
+- familyname: Harshvardhan
+  othernames: 
+  affiliation: Haslam College of Business, University of Tennessee
+  email: harshvar@vols.utk.edu
+keywords:
+  - seasonal demand
+  - days of supply
+  - safety stock targets
+  - industry practice
+  - inventory management
+acknowledgement:
+  "I'm grateful to Prof Sean Willems for the many discussions we have had on this topic which have improved my understanding of the topic significantly. Without him, my PhD journey wouldn't be the same."
+abstract: |
+  In this review, I understand the landslide effect as described in Neale and Willems (2014) and present my distilled learnings.
+bibliography: references.bib
+blind: false
+manuscriptno: ""
+output: rticles::informs_article
+---
+
+Many products experience seasonal demand. The seasonal patterns are typically repeated with some frequency annually. Generally, it is also observed that the "in-season" demand period produces a lot higher demand than the "non-season" demand, sometimes as much as 60-70% of the demand. For example, Elmer's Products, a Columbus, Ohio based company popular for its school glue, experiences higher demand for the months leading up to the back-to-school season, when its forecasts are multiplicatively high.
+
+In such a transitory period when the product demand period transitions from a high demand period to a low demand period, the company experiences a phenomenon that @neale2014 and Kraft Foods describe as "Landslide effect". The company experiences a bloated inventory as it moves from a low to high season demand and a severe drop in inventory (and service levels) moving from high to low season.
+
+The Landslide effect is a result of how companies calculate their safety stock levels. A forward coverage based Days of Supply (DOS) method of calculating inventory uses the future expected demand in calculating the inventory. Theoretically, the textbooks teach the safety stock should be calculated based on past periods of demand (i.e. backward coverage) while the future demand dictates the base stock. This result is counter-intuitive to practitioners.
+
+@neale2014 present a theoretical analysis of the effect and present following conclusions.
+
+1.  Forward coverage based DOS calculation for safety stock results in unusually high inventory levels at the end of low season (i.e. when transitioning from low to high season) and unusually low inventory inventory levels when transitioning from high to low season.
+2.  The root cause of this increase (and drop) in inventory levels is the common industry practice of using forward coverage "Days of Supply" for calculating the safety stock levels.
+3.  **Impact of seasonality:** When the product is more seasonal, the landslide and reverse-landslide effects are more pronounced.
+4.  **Impact of Lead Time:** Longer lead times lead to greater landslide and reverse-landslide effect.
+5.  **Impact of Demand Uncertainty:** Landslide effect is more severe for the products with higher demand uncertainty than products that have lower demand uncertainty (as measured from monthly coefficient of variation).
+6.  This effect has a relatively simple fix: use preceding demand for calculating the safety stock, while retaining the same character of Days of Supply (DOS).
+
+# Current Practice: Forward Days of Coverage
+
+The common method for forecasting seasonal demand is a Days of Supply (DOS) inventory targets. As the name implies, DOS targets express the desired inventory levels in days (or units of time). This has several nice properties.
+
+First, DOS targets intuitively self adjusts with demand. As the demand grows or shrinks, the safety stock changes appropriately. If the relative uncertainty (measured by coefficient of variation) remains relatively constant and only the mean fluctuates through the season, then the safety stock ($z\sigma\sqrt{T}$) will be the same for each season.[^1] Second, the DOS can itself be looked as a measure of the average time the safety stock can be used.
+
+[^1]: This is simple to prove. Assume $\sigma_1/\mu_1 = C$ for the period of high sales (1) and $\sigma_2/\mu_2 = C$ for period of low sales (2). When safety stock is expressed in DOS, it will both be $z \sigma_1 \sqrt{T} / \mu_1 = z \sigma_2 \sqrt{T} / \mu_2 = z C \sqrt{T}$.
+
+## Example
+
+**INSERT: Maybe add an example if time permits.**
+
+# Adaptive Base Stock Inventory Policy
+
+Calculating inventory requirements for non-stationary (i.e. seasonal) products is called adaptive base stock policy. Plans are reviewed periodically and replenishment orders are calculated to bring the inventory levels to the target level. The target level, or base stock, is a function of the demand forecasts, target service levels (or safety stock targets). Safety stock targets are usually calculated using the target service levels.
+
+Calculating the loss due to shortages is difficult for practitioners; however they do have a good estimate of the expected demand fulfillment levels. This implies that they would rather set the service level ($\alpha$) than prescribe the cost of missing a target.
+
+For the coming proofs, @neale2014 define a few variables. Review period is one time unit.
+
+-   $T$ is deterministic lead time,
+
+-   $d(a, b)$ is the demand over the time-period $(a, b)$,
+
+-   $\mu(t)$ is the expected (or mean) demand in period $t$,
+
+-   $\sigma(t)$ is the standard deviation of demand in period $t$,
+
+-   $\alpha(t)$ is the target service level in period $t$.
+
+At time \$t\$, the order placed in time-period $t-T$ would have arrived. At time \$t-T\$, this order brought the adaptive base stock to level \$B(t - T)\$, which denotes the net of all demand up to and including time period \$t-T\$. Total demand from the time $t$ is \$d(t-T, t)\$. Therefore, the inventory at time $t$ is
+
+$$
+I(t) = B(t-T) - d(t-T, t).
+$$
+
+To avoid stockouts, we would need $I(t) \geq 0$ at all time periods. This can be used to define the service levels.
+
+$$
+P\{d(t-T, t) \leq B(t-T)\} = \alpha(t).
+$$
+
+Assuming that the demand is independently, identically and normally distributed, the base stock at time period $t-T$ can be calculated as the sum of all expected cycle stocks and safety stocks.[^2]
+
+[^2]: What this means is easy to verify by expanding the indices. For example, $\sum_{i = 1}^T \mu(t-T+i)$ is actually $\mu(t - (T-1)) + \mu(t - (T-2)) + \mu(t - (T-3)) +...$ and $\sum_{i = 1}^T \sigma^2(t - T +i)$ is $\sigma^2(t - (T -1)) + \sigma^2(t - (T -2)) + \sigma^2(t - (T -3)) + ...$.
+
+$$
+B(t-T) = \sum_{i = 1}^T \mu(t-T+i) + \Phi^{-1}(\alpha(t)) \sqrt{\sum_{i = 1}^T \sigma^2(t - T +i)}.
+$$
+
+The safety stock level in the previous equation is the latter part.
+
+$$
+SS^N(t) = \Phi^{-1}(\alpha(t)) \sqrt{\sum_{i = 1}^T \sigma^2(t - T +i)}
+$$
+
+The key observation from this result is that the variance of demand in periods $t - T + 1$ through $t$ drives the safety stock at time $t$. The safety stock is a function of the demand parameters of the preceding time indexes. This is different from the base stock level calculations which changes in anticipation of the upcoming demand.
+
+The base stock level triggers a replenishment order that does not result in a safety stock on hand until $T$ periods later. We plan for safety stock in advance but it doesn't get fulfilled until the end of replenishment lead time, $T$. This is the source of why getting this timing right is important.
+
+Practitioners fail to appreciate this fact that for the time period that the safety stock order is placed, we do not actually know the demand for that period. In actuality, the safety stock could face depletion during that period which would render our model not as useful.
+
+This fundamental disconnect serves the base to defining and analyzing the landslide effect due to a mismatch is timing of supply and demand.
+
+# Landslide Effect
+
+Consider a product with two seasons, $j = 1, 2$. Let $\mu_j$ and $\sigma_j$ reflect the mean and standard deviation of demand for those periods. Let $r = \mu_1/\mu_1$ represent the mean demand multiple. The coefficient of variation is $C = \sigma_1/\mu_1 = \sigma_2/\mu_2$. The service level ($\alpha$) is assumed to be greater than 50%, else there would be no need for a safety stock. Lead time is represented as $T$.
+
+In this scenario, the DOS safety stock is calculated as $z\sigma\sqrt{T}$, where $z = \Phi^{-1}(\alpha)$. Note that we have the same DOS target ($D$) for both the seasons as $D = z\sigma_1\sqrt{T}/\mu_1 = z\sigma_2\sqrt{T}/\mu_2$. For simplicity, assume $D$ is an integer.The forward coverage metric ($SS^F(t)$ ) would convert this safety stock target to units by summing up the upcoming forecasts. That is,
+
+$$
+SS^F(t) = \sum_{i = 1}^D \mu(t+i).
+$$
+
+## Comparing Forward and Backward Coverage
+
+For this purpose, @neale2014 study the ratio forward and backward coverage metrics given by the following expression.
+
+$$
+\frac{SS^F(t)}{SS^N(t)} = \frac{\sum_{i = 1}^D \mu(t + i)}{z \sqrt{\sum_{i = 1}^T \sigma^2(t-T+i)}}.
+$$
+
+This expression can be simplified for three cases.
+
+### Case 1: $t \leq s-D$ or $t>s+T$
+
+For far ahead or before the transitory period (when we move from high to low or low to high season), the ratio is exactly equal to 1.
+
+#### Proof
+
+The numerator in this case would be $D \times \mu_j$ and the denominator would be $z \times T \times \sigma_j$, which when taken a ratio of would result in 1. Thus, $s-D+1 \leq t \leq s+T-1$ is the period of interest for the landslide effect (called transitory window in the paper).
+
+### Case 2: $s - D + 1 \leq t \leq s$
+
+In this case, let $b$ be the time periods before the final season ($b = 0, 1, …, D-1$). Then the ratio becomes:
+
+$$
+\frac{SS^F(t)}{SS^N(t)} = \frac{b \mu_1 + (D-b)\mu_2}{z \sqrt{T \sigma^2}}.
+$$
+
+Both, numerator and denominator are simplified by opening up the original formula. Now, substituting $\mu_2 = r \mu_1$ and $D = z\sigma_1\sqrt{T}/\mu_1$, we obtain the following.
+
+$$
+\frac{SS^F(t)}{SS^N(t)} = r + \frac{b(1-r)}{D}.
+$$
+
+### Case 3: $s \leq t \leq s+T-1$
+
+Let $a = t-s$ represent the number of periods after the final period of season one ($a = 0, 1, …, s+T-1$). Then, the ratio becomes the following upon opening up the summation and adding up the terms.
+
+$$
+\frac{SS^F(t)}{SS^N(t)} = \frac{D\mu_2}{z\sqrt{a\sigma_2^2 + (T-a)\sigma_1^2}}
+$$
+
+Again by substituting for $r = \sigma_2/\sigma_1$ and $D = z\sigma_2\sqrt{T}/\mu_2$, we obtain the following result.
+
+$$
+\frac{SS^F(t)}{SS^N(t)} = \sqrt{\frac{Tr^2}{a(r^2 - 1) + T}}.
+$$
+
+## Proposition 1
+
+For the transition window from $D-1$ periods before the end of a season until $T-1$ periods after the end of that season:
+
+1.  If $r<1$, then $\frac{SS^F(t)}{SS^N(t)} < 1$
+
+    When transitioning from high season to low season, the forward coverage approach results too little safety stock in each period of the transition window. The greatest error (i.e., smallest ratio) occurs in the final period of the high season, i.e. $\frac{SS^F(t)}{SS^N(t)} = r$.
+
+2.  If $r>1$, then $\frac{SS^F(t)}{SS^N(t)} > 1$
+
+    When transitioning from low season to high season, the forward coverage approach results in too much safety stock in each period of the transitory window. The greatest error (i.e. largest ratio) will occur in the final period of the low season when $\frac{SS^F(t)}{SS^N(t)} = r$.
+
+#### Proof
+
+Consider the case when $r < 1$ and $s-D+1 \leq t \leq s$. We can multiply numerator and denominator by $D$ to obtain $\frac{Dr + b(1-r)}{D}$. As $0 \leq b < D$ and $1-r>0$ by definition, we can see that $Dr + b(1-r) < Dr + D(1-r) = D$. Thus, the maximum possible value of the ratio is $D/D = 1$.
+
+Now, the first derivative of the expression for Case 2 is
+
+$$
+\frac{d}{db} \left(r + \frac{b(1-r)}{D}\right) = \frac{1-r}{D} > 0.
+$$
+
+This implies that the ratio is increasing. Thus, it's lower bound will be obtained when $b = 0$ and then the ratio $\frac{SS^F(t)}{SS^N(t)} = 1$.
+
+For the case 3, we can see that $T(r^2-1) < a(r^2-1)$ since $a<T$ and $(r^2-1)<0$. Therefore, $\frac{Tr^2}{a(r^2 - 1) + T}<1$, which means $\frac{SS^F(t)}{SS^N(t)} < 1$. The first derivative of the equation in Case 2 with respect to $a$ is
+
+$$
+\frac{d}{da} \left( \sqrt{\frac{Tr^2}{a(r^2 - 1) + T}}  \right) = \frac{(1-r^2) \sqrt{Tr^2}}{2(a(r^2 - 1)T)^{3/2}}.
+$$ Now, $a(r^2-1) \geq -a$ as $(r^2 - 1)\geq -1$ and $a \geq 0$. As $a<T$, $-a>-T$ and thus $a(r^2-1)>-T$. The denominator of the above derivative is also positive. Thus, the equation is an increasing function of $a$ annd obtains the minimum value when $a = 0$, where $\frac{SS^F(t)}{SS^N(t)} = 1$.
+
+## Proposition 2
+
+The worst case expected service level when transitioning from a high season to a low season via forward coverage occurs in the final period of the high season and is equal to $\Phi^{-1}(r \times \Phi^{-1}(\alpha))$.
+
+#### Proof
+
+Using the service level formula, we see
+
+$$
+\alpha^F(t) = P\left[ d(t-T+1, t) \leq SS^F(t) + \sum_{i = 1}^T \mu(t-T+i) \right]\\
+= \Phi \left( \frac{SS^F(t)}{\sqrt{\sum_{i = 1}^T} \sigma^2(t-T+i)} \right)\\
+= \Phi \left(z \times \frac{SS^F(t)}{SS^N(t)} \right).
+$$
+
+In the previous proposition (2), we proved that the ratio $\frac{SS^F(t)}{SS^N(t)}$ will attain it's minimum when it is equal to $r$, which is when we will have the worst expected service level. Therefore, the worst expected service level is $\Phi(z\times r)$ which is equal to $\Phi(r \times \Phi^{-1}(\alpha))$ as $\frac{SS^F(t)}{SS^N(t)} = F(\alpha)$.
+
+## Proposition 3
+
+The magnitude of the safety stock and service level errors in the each period under forward-coverage is increasing in $r>1$, decreasing in $r<1$ and non-decreasing in $T$ and $C$.
+
+This proposition helps us understand what drives the landslide effect. Products with high seasonality, longer lead times and high demand uncertainty are most susceptible to landslide effect.
+
+1.  Longer lead time would make the forward coverage based safety stock to look more forward when it should be using the backward days of supply.
+2.  Higher demand certainty or volatility increases the $\sigma$ in the calculation of the safety stock, which means that any misalignment is further amplified. (Note that $\sigma/\mu = C$.)
+3.  The ratio of mean demands ($r$) between in-season and out-season cycles further intensifies how much we experience the landslide effect.
+
+The target service level doesn't have a closed form solution to represent the relationship with other variables. Therefore, we cannot make a definitive claim about how a high service level affects other parameters, or vice-versa.
+
+#### Proof
+
+The safety stock error ratio $\frac{SS^F(t)}{SS^N(t)}$ should ideally be 1, i.e. the forward and backward coverage should give us the same results. Therefore, we should be investigating it's (absolute) deviation from 1, defined as $\epsilon_{SS} = \left| \frac{SSF}{SSN} - 1 \right|$.
+
+**Case A.** Consider the case when $r<1$ and $s-D+1 \leq t \leq s$, i.e. the case when we're transitioning from low demand season to high demand season up to time period \$D\$. From the first theorem and first proposition, we found that in this case $\frac{SSF}{SSN} < 1$. In that case, $\epsilon_{SS} = 1-\frac{SSF}{SSN}$.
+
+Using the equation obtained in Case 2 of Theorem 1,
+
+```{=latex}
+\begin{align}
+\epsilon_{SS} &= 1 - \frac{SS^F}{SS^N}\\
+&= 1 - r - \frac{b(1-r)}{D}.
+\end{align}
+```
+Since $b>0$, we will have
+
+$$
+\frac{\delta \epsilon_{SS}}{\delta D} = \frac{b(1-r)}{D^2} >0.
+$$
+
+This proves that the error is an increasing function of $D$ and therefore in $C$ and $T$. (Remember that $D = zC\sqrt{T}$, by definition. When $b = 0$, $\epsilon_{SS} = 1-r$, i.e. it doesn't depend on either $z, C$ or $T$.
+
+For $b \geq 0$, we will have
+
+$$
+\frac{\delta \epsilon_{SS}}{\delta r} = -1 + \frac{b}{D} < 0,
+$$
+
+as $b < D$, so the $\epsilon_{SS}$ is decreasing in $r$.
+
+**Case B.** Consider the case when $r>1$ and $s-D+1\leq t \leq s$. In this case, $\frac{SSF}{SSN}<1$. Using the equation obtained in Case 2 of Theorem 1, we get $\epsilon_{SS} = r + \frac{b(1-r)}{D} - 1$.
+
+For any $b>0$, we have
+
+$$
+\frac{\delta \epsilon_{SS}}{\delta D} = \frac{b(r-1)}{D^2} > 0.
+$$
+
+Therefore, the error is increasing with respect to $D$ and therefore in $C$ and $T$. (Recall that $D = zC\sqrt{T}$, be definition).
+
+For $b=0$, the error doesn't depend on $D$ (i.e. neither on $C$ nor on \$T\$). For $b \geq 0$,
+
+$$
+\frac{\delta \epsilon_{SS}}{\delta r} = 1 + \frac{b}{D} > 0.
+$$
+
+Therefore, the error is increasing in $r$.
+
+# Conclusion
+
+In this paper, I reviewed how companies can calculate their safety stocks in a more scientific manner and how it can deviate from the principles. Landslide effect is visible from the example and the case study presented in the paper along with several companies' experiences.
