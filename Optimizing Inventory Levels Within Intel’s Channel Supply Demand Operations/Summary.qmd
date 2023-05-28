@@ -1,0 +1,118 @@
+---
+title: "Optimizing Inventory Levels Within Intel's Channel Supply Demand Operations" 
+subtitle: "Brian Wieland, Pat Mastrantonio, Sean P. Willems, Karl G. Kempf"
+author: "Harshvardhan"
+date: "November 13, 2022"
+format: 
+   pdf:
+      toc: true
+editor: visual
+bibliography: references.bib
+---
+
+## Abstract
+
+Intel's Channel Supply Demand Operations (CSDO) organization is responsible for satisfying the boxed processor demands of Intel's vast customer network of distributors, resellers, dealers, and system integrators. In 2005, CSDO began a multiechelon inventory optimization (MEIO) project to improve its efficiency and effectiveness by optimizing inventory levels and locations across CSDO's end-to-end supply chain. This paper describes the project plan, workflows, and results. One year after implementation, total inventory levels were reduced by more than 11 percent; in addition, service levels of products modeled using the MEIO process were eight points higher than products not modeled using this process. The MEIO process continues to be in place at Intel and has resulted in sustained reductions in inventory levels, average service levels exceeding 90 percent, and more than an order-of-magnitude reduction in the number of expedites.
+
+### Citation
+
+Wieland, Brian, Pat Mastrantonio, Sean P. Willems, and Karl G. Kempf. "Optimizing inventory levels within Intel's channel supply demand operations." Interfaces 42, no. 6 (2012): 517-527.
+
+Available at: [https://doi.org/10.1287/inte.1120.0637](https://doi.org/10.1287/inte.1120.0637https://doi.org/10.1287/inte.1120.0637)
+
+\newpage
+
+# What does the paper describe?
+
+The Channel Supply Demand Operations (CDSO) is responsible for around 20% of Intel's boxed processor shipments. It satisfies channel demand, i.e. demand from distributors, resellers and local integrators. Demand from large computer manufacturers like Dell, Lenovo is not counted. Beginning in 2005, CSDO began a multiechelon inventory optimisation (MEIO) project, using PowerChain tool. This paper describes the plans, workflows and results from the paper. The supply chain was built as three-echelon system which converted finished microprocessors to saleable products.
+
+## How was the project implemented?
+
+The implementation comprised of four steps.
+
+### 1. Supply Chain Education
+
+It was critical for planners to move from "capacity mindset" to "supply chain mindset". Capacity mindset favoured maximising plant utilisation, which means continuing production even after all orders and inventory targets are met. Capacity utilisation was an important metric tracked for a multibillion dollar plant. The inventory optimisation approach described here augmented the capacity planning by choosing the right products to manufacture, allocating capacity cost-effectively.
+
+**Demand uncertainty** expounds the effect of supply chain uncertainty. Product lifecycles are short. Managing product trasitions is also complex. Customers contribute to demand uncertainty by ordering supply they might not need, then changing or cancelling these orders at a later date.
+
+Assemble-to-order systems are difficult as lead times are often short. Thus, placing inventory strategically becomes important to fight the tradeoff between fast responsiveness to customer requests and low inventory-cost exposure.
+
+### 2. Tool Selection
+
+Intel selected Optiant's PowerChain Inventory product as its MEIO optimisation tool. The MEIO formulation details can be found in @graves2000, @bossert2007 and @humair2011. The tool converts the supply chain network at Intel to an MEIO formulation. See @fig-cdso for details.
+
+::: {#fig-cdso layout-ncol="2"}
+![CDSO Supply Chain](fig1.png){#fig-cdso1}
+
+![CDSO Supply Chain, as converted to MEIO formulation by PowerChain tool.](fig2.png){#fig-cdso2}
+
+CDSO Supply Chain as observed in the network versus as converted to the MEIO formulation by Opiant's PowerChain tool.
+:::
+
+-   Safety stock can be held at four locations in the CSDO supply chain: CW1, a CW2 location before boxing occurs, a CW2 location after boxing occurs, or in the regions at CW3 warehouses.
+
+-   For boxing operations that supply two geographies, a stage representing a boxed microprocessor has arcs to each CW3 location it supplies. In cases in which a CW3 stage is supplied by two CW2 stages, each arc has an arc multiplier that represents the fraction of demand.
+
+-   Arc multipliers are the only pieces of data associated with an arc. All other supply chain data are associated with a stage. All stages contain stage processing time, review-period length, replenishments per review, cost added, and holding-cost information.
+
+-   **Times:** CW1's stage time is 30 days, review time is 30 days with weekly replenishiments. Time from CW1 to CW2 is less than one week. Boxing time at CW2 is one week. Shipment from CW2 to CW3 is another week. Review periods for CW2 and CW3 is one week.
+
+-   Average demand is the average of next six weeks' forecasted demand. Standard deviation of demand is calculated by comparing last month's demand with upcoming month's demand. This will be applied moving forward in time, which makes me wonder if we can observe Landslide effects here. Planners spend time validating this assumption --- last month's demand has similar standard deviation as the coming month's demand.
+
+### 3. Integrate MEIO into Build Plan Process
+
+This step integrates the MEIO results to sales and operations planning (S&OP). Its foundation is based on SAP's Advanced Planner and Optimizer (APO), which resets the build plan on a weekly basis. The projected End of Horizon (EOH) inventory is also in input, provided by MEIO process.
+
+-   MEIO-specific data characterize sources of variability in the problem, while BPS-specific data address capacity and material availability constraints.
+
+-   The MEIO engine specifies the EOH inventory targets over the 26-week horizon. These targets are an additional input to BPS and are the link between the MEIO and BPS modules. Prior to the MEIO project, these EOH inventory targets were set as rules of thumb or derived by planners using tools developed in-house.
+
+### 4. Metrics development
+
+A project can only be judged against its metrics. Initially, there were two metrics and in 2006 a third one was added.
+
+1.  Actual service level achieved
+2.  Total inventory level
+3.  Change in number of change order requests
+
+# What were the obstacles encountered in the project's implementation?
+
+## Setting service levels
+
+Newly introduced products must be stocked sufficiently so that they can grow to become tomorrow's high volume sellers. MEIO tool highlighted the importance of service levels in the process. CSDO partitions its SKUs into one of three categories: A, B, or C. This classification takes into account current revenue, volume potential, revenue potential and strategic value to Intel. At any point in time, 20--30 SKUs are A items, 40--60 are B items, and the remaining 50--75 are C items.
+
+## Choosing SKUs to Model
+
+-   SKUs with more than 3,000 units of demand per month and 12,000 units per quarter were includeed in the project.
+
+-   For products with demand between 300 and 3,000 units a month, safety stock targets were set with a rule of thumb equivalent to a specified week of inventory based on the SKU's A--B--C classification.
+
+-   For SKUs with demand less than 300 units a month or ramping down dramatically or completely within three months, safety stock was not held and the SKU was managed on a make-to-order basis.
+
+## Prioritizing Safety Stock Targets
+
+-   Capacity constraints can dictate that suggested safety stock plans by the MEIO tool are unfeasible. The team adopted the rule to keep safety stock at CW2 and CW3 as opposed to CW1.
+
+-   This makes economic sense: customers come to CW3 with their demand. Sitting safety stock at CW1 costs Intel with no direct benefits.
+
+-   Holding inventory at CW2 and CW3 costs more but results in lower safety stock. $z \sigma (\sqrt{T_1} + \sqrt{T_2} + \sqrt{T_3}) > z \sigma (\sqrt{T_1 + T_2} + \sqrt{T_3}) > z \sigma \sqrt{T_1 + T_2 + T_3}$ because of pooling.
+
+# What were the results from the project?
+
+-   SKUs planned by the MEIO tool consistently achieve higher service levels than the set of planner managed or make-to-order SKUs.
+
+-   Because the MEIO-managed and planner-managed SKUs have the same service-level targets, strong anecdotal evidence suggests that the modeling and management processes put in place are the primary reasons for the MEIO tool's success.
+
+-   Inventory levels declined; service level achieved improved and number of change order requests reduced, resulting in improvements in all three metrics.
+
+# What did we learn from the project?
+
+1.  Keep models and processes simple.
+2.  Make things better now. There is always an opportunity for improvement in the future.
+3.  Implement in a phased manner.
+4.  Be clear about what the success is.
+
+\newpage
+
+# References
